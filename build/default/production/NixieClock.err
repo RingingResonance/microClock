@@ -1,0 +1,53 @@
+Warning[205] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 19 : Found directive in column 1. (__config)
+Warning[205] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 22 : Found directive in column 1. (PROCESSOR)
+Message[305] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 114 : Using default destination of 1 (file).
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 146 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 148 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 150 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 152 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 153 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 154 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 156 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 158 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 272 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 273 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 284 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 286 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 328 : Using default destination of 1 (file).
+Message[305] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 343 : Using default destination of 1 (file).
+Message[305] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 344 : Using default destination of 1 (file).
+Message[305] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 350 : Using default destination of 1 (file).
+Message[305] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 356 : Using default destination of 1 (file).
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 373 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 374 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 376 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 381 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 383 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 384 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 386 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 388 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 393 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 394 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 396 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 401 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 403 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 404 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 406 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 408 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 430 : Using default destination of 1 (file).
+Message[305] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 437 : Using default destination of 1 (file).
+Message[305] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 443 : Using default destination of 1 (file).
+Message[305] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 450 : Using default destination of 1 (file).
+Message[305] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 474 : Using default destination of 1 (file).
+Message[305] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 478 : Using default destination of 1 (file).
+Message[305] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 479 : Using default destination of 1 (file).
+Message[305] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 813 : Using default destination of 1 (file).
+Message[305] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 826 : Using default destination of 1 (file).
+Message[305] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 832 : Using default destination of 1 (file).
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 880 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 881 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 882 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 897 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 898 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 899 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] C:\USERS\USER\MPLABXPROJECTS\NIXIECLOCK.X\NIXIECLOCK.ASM 913 : Found directive in column 1. (END)

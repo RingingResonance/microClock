@@ -1,0 +1,1305 @@
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 
+                      00002 ;    <Nixe Tube Clock>
+                      00003 ;    Copyright (C) <2013>  <Jarrett R. Cigainero>
+                      00004 ;
+                      00005 ;    This program is free software: you can redistribute it and/or modify
+                      00006 ;    it under the terms of the GNU General Public License as published by
+                      00007 ;    the Free Software Foundation, either version 3 of the License, or
+                      00008 ;    (at your option) any later version.
+                      00009 ;
+                      00010 ;    This program is distributed in the hope that it will be useful,
+                      00011 ;    but WITHOUT ANY WARRANTY; without even the implied warranty of
+                      00012 ;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+                      00013 ;    GNU General Public License for more details.
+                      00014 ;
+                      00015 ;    You should have received a copy of the GNU General Public License
+                      00016 ;    along with this program.  If not, see <http://www.gnu.org/licenses>
+                      00017 
+                      00018 ; CONFIG
+Warning[205]: Found directive in column 1. (__config)
+2007   3F30           00019 __config 0x3F30
+                      00020 
+                      00021 
+Warning[205]: Found directive in column 1. (PROCESSOR)
+                      00022 PROCESSOR       PIC16F628A
+  00000003            00023 status          equ     0x03
+  00000005            00024 rp0             equ     0x05
+  00000006            00025 rp1             equ     0x06
+  00000000            00026 c               equ     0x00
+  00000002            00027 z               equ     0x02
+  00000007            00028 endb            equ     0x07
+  0000009B            00029 eeadr           equ     0x9B    ;bank1
+  0000009A            00030 eedata          equ     0x9A    ;bank1
+  0000009C            00031 eecon1          equ     0x9C    ;bank1
+  0000009D            00032 eecon2          equ     0x9D    ;bank1
+  00000005            00033 porta           equ     0x05
+  00000006            00034 portb           equ     0x06
+  00000081            00035 opt_reg         equ     0x81
+  00000085            00036 trisa           equ     0x85
+  00000086            00037 trisb           equ     0x86
+  0000009F            00038 vrcon           equ     0x9F
+  00000098            00039 txsta           equ     0x98
+  00000017            00040 ccp1con         equ     0x17
+  0000001F            00041 cmcon           equ     0x1F
+  00000011            00042 tmr2            equ     0x11
+  00000012            00043 t2con           equ     0x12
+  00000006            00044 mset            equ     0x06                            ;Minute set button      PortA, RA6
+  00000007            00045 hset            equ     0x07                            ;Hour set button        PortA, RA7
+  00000004            00046 power           equ     0x04                            ;Power supply detect    PortA, RA4
+  00000004            00047 TclkOut         equ     0x04                            ;Clock Pulse out for calibration    PortB RB4
+  00000010            00048 t1con           equ     0x10    ;bank0
+  0000008E            00049 pcon            equ     0x8E    ;bank1
+  0000008C            00050 pie1            equ     0x8c    ;bank1
+  0000000C            00051 pir1            equ     0x0c    ;bank0
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+  0000000B            00052 intcon          equ     0x0b    ;bank0
+  0000000E            00053 tmr1l           equ     0x0e    ;bank0
+  0000000F            00054 tmr1h           equ     0x0f    ;bank0
+  00000092            00055 pr2             equ     0x92    ;bank1
+  00000021            00056 dwt1            equ     0x21    ;bank0
+  00000022            00057 dwt2            equ     0x22    ;bank0
+  00000023            00058 d1              equ     0x23    ;bank0          Digit number 1 (from right to left faceing the clock)
+  00000024            00059 d2              equ     0x24    ;bank0          Digit number 2 (from right to left faceing the clock)
+  00000025            00060 d3              equ     0x25    ;bank0          Digit number 3 (from right to left faceing the clock)
+  00000026            00061 d4              equ     0x26    ;bank0          Digit number 4 (from right to left faceing the clock)
+  00000028            00062 sst             equ     0x28    ;bank0          Part of our Status and W REGs temps
+  00000029            00063 sw              equ     0x29    ;bank0          Part of our Status and W REGs temps
+  0000002A            00064 second          equ     0x2a    ;bank0          Counts to 60 before rolling over
+  0000002B            00065 dwtf            equ     0x2b    ;bank0          Display timeing var
+  0000002C            00066 dwts            equ     0x2c    ;bank0          Display timeing var
+  0000002D            00067 dwtcf           equ     0x2d    ;bank0          Display timeing var
+  0000002E            00068 dwtcs           equ     0x2e    ;bank0          Display timeing var
+  0000002F            00069 udstat1         equ     0x2f    ;bank0
+  00000030            00070 udstat2         equ     0x30    ;bank0
+  00000031            00071 do1             equ     0x31    ;bank0          Digit number 1 "OLD data for display fadeing" (from righ
+                            t to left faceing the clock)
+  00000032            00072 do2             equ     0x32    ;bank0          Digit number 2 "OLD data for display fadeing" (from righ
+                            t to left faceing the clock)
+  00000033            00073 do3             equ     0x33    ;bank0          Digit number 3 "OLD data for display fadeing" (from righ
+                            t to left faceing the clock)
+  00000034            00074 do4             equ     0x34    ;bank0          Digit number 4 "OLD data for display fadeing" (from righ
+                            t to left faceing the clock)
+  00000035            00075 nset            equ     0x35    ;bank0
+  00000036            00076 tnset           equ     0x36    ;bank0
+  00000037            00077 ftime           equ     0x37    ;bank0
+  00000038            00078 ftime1          equ     0x38    ;bank0
+  00000039            00079 Ltmr1l          equ     0x39    ;bank0
+  0000003A            00080 Ltmr1h          equ     0x3A    ;bank0
+  0000003B            00081 tcirqreg        equ     0x3B    ;bank0
+  0000003C            00082 cd1             equ     0x3C    ;bank0          Digit number 1 for displaying (from right to left facein
+                            g the clock)
+  0000003D            00083 cd2             equ     0x3D    ;bank0          Digit number 2 for displaying (from right to left facein
+                            g the clock)
+  0000003E            00084 cd3             equ     0x3E    ;bank0          Digit number 3 for displaying (from right to left facein
+                            g the clock)
+  0000003F            00085 cd4             equ     0x3F    ;bank0          Digit number 4 for displaying (from right to left facein
+                            g the clock)
+  00000040            00086 fadetime        equ     0x40    ;bank0          Var to tell us what timeing sub to use
+  00000041            00087 D1chk           equ     0x41    ;bank0          Time digit Checkup.
+  00000042            00088 D2chk           equ     0x42    ;bank0
+  00000043            00089 D3chk           equ     0x43    ;bank0
+  00000044            00090 D4chk           equ     0x44    ;bank0
+  00000045            00091 calDsp          equ     0x45    ;bank0
+  00000046            00092 calPrep         equ     0x46    ;bank0
+  00000047            00093 dspBright       equ     0x47    ;bank0
+  00000048            00094 calPlsOut       equ     0x48    ;bank0
+  00000049            00095 scsv            equ     0x49    ;bank0          screen saver bit
+  0000004A            00096 dithcal         equ     0x4A    ;bank0
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+  0000004B            00097 dithcnt         equ     0x4B    ;bank0
+  0000004C            00098 Ltmr1ltmp       equ     0x4C    ;bank0
+                      00099 ;****************  Address 0x00 in ROM  ****************
+                      00100         org     0x00
+0000   2???           00101         goto    init
+                      00102 ;****************  IRQ vector *******************
+                      00103         org     4                                       ;Interrupt Vector
+0004   00A9           00104         movwf   sw                      ;we need to save our W and Status REGs before we begine our IRQ 
+                            sub.
+0005   0803           00105         movf    status, 0x00
+0006   00A8           00106         movwf   sst
+                      00107 
+                      00108 ;dither stuff for timeing adjustment.
+0007   084A           00109         movf    dithcal, 0x00           ;If (dithcal == 0) goto zroed
+0008   3E05           00110         addlw   d'5'                    ;Add 5 first then check to see if dithcal is equal to 5 to check
+                             if zero.
+0009   3C05           00111         sublw   d'5'                    ;
+000A   1903           00112         btfsc   status, z               ;We check to see if it's 0 like this because sublw'ing a 0 doesn
+                            't seem to actually do anything with the status bits. IDK why.
+000B   2???           00113         goto    zroed
+Message[305]: Using default destination of 1 (file).
+000C   0BCB           00114         decfsz  dithcnt                 ;Else decrease dithcnt, chk if zero, reset if it is.
+000D   2???           00115         goto    dthchk
+000E   300A           00116         movlw   d'10'
+000F   00CB           00117         movwf   dithcnt
+                      00118 
+                      00119 ;Do a comparison with 'dithcnt' and 'bithcal'
+                      00120 ;acts as a sort of "PWM" that switches the duty cycle between two 'Ltmr1l' sets.
+0010   084B           00121 dthchk  movf    dithcnt, 0x00           ;W
+0011   024A           00122         subwf   dithcal, 0x00           ;F
+0012   1C03           00123         btfss   status, c               ;F - W. If result is equal or positive C = 1
+0013   2???           00124         goto    zroed                   ;Go here if dithcnt < dithcal
+0014   0839           00125         movf    Ltmr1l, 0x00
+0015   078E           00126         addwf   tmr1l, 0x01             ;add the two together.
+0016   2???           00127         goto    roed
+                      00128 
+                      00129 ;If 'dithcal' is = 0 then we don't dither between two setpoints.
+0017   084C           00130 zroed   movf    Ltmr1ltmp, 0x00         ;Ltmr1ltmp = Ltmr1l + 1
+0018   078E           00131         addwf   tmr1l, 0x01             ;add the two together.
+0019   1803           00132 roed    btfsc   status, c               ;check to see if the add caused a rollover.
+001A   2???           00133         goto    addtime
+001B   083A           00134         movf    Ltmr1h, 0x00
+001C   008F           00135         movwf   tmr1h
+001D   2???           00136         goto    count                   ;This routin down near the bottom of the source...
+001E   083A           00137 addtime movf    Ltmr1h, 0x00
+001F   3E01           00138         addlw   d'1'
+0020   008F           00139         movwf   tmr1h
+0021   2???           00140         goto    count
+                      00141 
+                      00142 ;****************  INIT  ************************
+                      00143 ;********* Prepar our inital variables **********
+                      00144 ;               org     20
+0022   1683           00145 init            bsf     status,rp0                      ;go into bank1
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0023   158E           00146                 bsf     pcon, 0x03                      ;set to 4 MHZ
+0024   30F0           00147                 movlw   0xF0
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0025   0085           00148                 movwf   trisa
+0026   30E0           00149                 movlw   0xE0
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0027   0086           00150                 movwf   trisb
+0028   3001           00151                 movlw   b'00000001'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0029   008C           00152                 movwf   pie1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+002A   019F           00153                 CLRF    vrcon
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+002B   0198           00154                 CLRF    txsta
+002C   3020           00155                 MOVLW   b'00100000'                     ;Set our timer0 to not run.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+002D   0081           00156                 MOVWF   opt_reg
+002E   3050           00157                 movlw   d'80'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+002F   0092           00158                 movwf   pr2
+0030   1283           00159                 bcf             status,rp0              ;go back to bank0
+0031   2???           00160                 call    dwait2
+0032   3000           00161                 movlw   b'00000000'
+0033   0085           00162                 movwf   porta
+0034   300F           00163                 movlw   b'00001111'
+0035   0090           00164                 movwf   t1con
+0036   30C0           00165                 movlw   b'11000000'
+0037   008B           00166                 movwf   intcon
+0038   0197           00167                 CLRF    ccp1con
+0039   019F           00168                 CLRF    cmcon
+003A   1045           00169                 bcf     calDsp, 0x00
+003B   3000           00170                 movlw   b'00000000'
+003C   0092           00171                 movwf   t2con
+003D   01C8           00172                 clrf    calPlsOut
+003E   300A           00173                 movlw   d'10'
+003F   00CB           00174                 movwf   dithcnt
+0040   01CA           00175                 clrf    dithcal
+                      00176 ;********** clock timeing adjust ***************
+                      00177 ;--Moved to very bottom.
+0041   2???           00178                 call    clkupdt                     ;Gets clock calibration data from EEPROM on startup.
+                      00179 ;************************************************
+                      00180 ;display timeing.
+0042   3078           00181                 movlw   d'120'
+0043   00AE           00182                 movwf   dwtcs
+0044   3001           00183                 movlw   d'1'
+0045   00AD           00184                 movwf   dwtcf
+                      00185 
+                      00186 ;******** Initial time check on reset or powerup ***************************
+                      00187 ;The last thing we want to do is unknowingly display the incorrect time.
+                      00188 
+0046   01B5           00189                 clrf    nset                    ;Blink our numbers on a CPU reset because we don't know 
+                            if the time is correct.
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0047   2???           00190                 call    dtachk                  ;Check for time data or memory curruption.
+                      00191 ;***************************************************************************
+0048   3006           00192                 movlw   d'6'
+0049   00B8           00193                 movwf   ftime1                  ;how many times we scan through the diaplay before chang
+                            ing the dutycycle during a fade sequence. Changes how fast we fade.
+004A   102F           00194                 bcf     udstat1, 0x00
+                      00195 
+                      00196 ;************** Main Routine  *************
+                      00197 ;******************************************
+                      00198 ;******************************************
+                      00199 ;variables "do1 - do4" is "data old"
+                      00200 ;variables "d1 - d4" is "new data"
+                      00201 
+004B   2???           00202 disp            call    scchk
+004C   1B05           00203                 btfsc   porta, mset             ;check to see if minute button has been pressed.
+004D   2???           00204                 goto    setm
+004E   1B85           00205                 btfsc   porta, hset             ;check to see if hour button has been pressed.
+004F   2???           00206                 goto    seth
+0050   1E05           00207                 btfss   porta, power            ;check to see if power has failed.
+0051   2???           00208                 call    psleep
+                      00209 ;************** Time check *******************
+                      00210 ;Look for currupted data to see if we need to reset the time
+                      00211 ;and/or blink our numbers.
+0052   0835           00212                 movf    nset, 0x00              ;time curruption check 1 for blinking stuff
+0053   3C55           00213                 sublw   d'85'                   ;check to see if "nset" is 85 or not, we want to blink o
+                            ur numbers if it isin't 85.
+0054   1903           00214                 btfsc   status,z
+0055   2???           00215                 goto    dispnxt
+                      00216 ; Blinking Display
+0056   2???           00217                 call    uod
+0057   1C2A           00218                 btfss   second, 0x00
+0058   2???           00219                 goto    disoff
+0059   2???           00220                 call    dsct                    ;we want to display our current set time even if we don'
+                            t know if it's correct, but make it blink if we think it might not be correct.
+005A   30FF           00221                 movlw   d'255'
+005B   00AE           00222                 movwf   dwtcs
+005C   30FF           00223                 movlw   d'255'
+005D   00AD           00224                 movwf   dwtcf
+005E   2???           00225                 call    dct                     ;now display it!
+005F   2???           00226                 call    ddrset
+0060   2???           00227                 goto    disp
+                      00228 
+0061   3000           00229 disoff          movlw   b'00000000'             ;Blank the display.
+0062   0085           00230                 movwf   porta
+0063   2???           00231                 goto    disp
+                      00232 ;**********************************************
+                      00233 ;Screen Saver Check, Cycle through all numbers 
+                      00234 ;once at 2:00. Supposedly this helps Nixie Tubes last longer?
+                      00235 ;IDK, but it is neat looking!
+                      00236 ;Why 2:00? because it's easy to check for that time, and it's an odd time
+                      00237 ;People are less likely to need to know that it's 2:00
+                      00238 
+0064   0826           00239 scchk           movf    d4, 0x00
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0065   3C01           00240                 sublw   d'1'
+0066   1903           00241                 btfsc   status, z
+0067   0008           00242                 return
+                      00243 
+0068   0825           00244                 movf    d3, 0x00
+0069   3C01           00245                 sublw   d'1'
+006A   1D03           00246                 btfss   status, z
+006B   2???           00247                 goto    chktwo
+006C   1049           00248                 bcf     scsv, 0x00              ;Clear this if it is 1:00, this enables the screen saver
+                             to run.
+006D   0008           00249                 return
+                      00250 ;Only run it once.
+006E   0825           00251 chktwo          movf    d3, 0x00
+006F   3C02           00252                 sublw   d'2'
+0070   1D03           00253                 btfss   status, z
+0071   0008           00254                 return
+0072   1849           00255                 btfsc   scsv, 0x00              ;Skip the screen save if it has already been run.
+0073   0008           00256                 return
+0074   30FF           00257                 movlw   d'255'
+0075   00AE           00258                 movwf   dwtcs
+0076   30FF           00259                 movlw   d'255'
+0077   00AD           00260                 movwf   dwtcf
+0078   2???           00261                 call    scrsav
+0079   2???           00262                 call    ddrset
+007A   0008           00263                 return
+                      00264 
+                      00265 ;***************************************
+                      00266 ; ***** Low power shut down mode *******
+                      00267 
+007B   0186           00268 psleep          CLRF    portb
+007C   0185           00269                 CLRF    porta
+007D   1683           00270                 bsf             status,rp0      ;go into bank1
+007E   30FF           00271                 movlw   0xFF
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+007F   0085           00272                 movwf   trisa                   ;change all I/O to inputs. All of them.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0080   0086           00273                 movwf   trisb
+                      00274                 ;bcf    pcon, 0x03              ;set main clock to 48 KHZ
+                      00275                 ;pointless to set to 48KHZ, the same number of instructions runs regardless of speed and
+                             thuse the micro-controller will consume roughly the same amount of power each second that it up
+0081   1283           00276                 bcf             status,rp0      ;go into bank0
+0082   0063           00277 psleep2         SLEEP                           ;Timer 1 is still running to keep the time.
+0083   1E05           00278                 BTFSS   porta, power            ;Test to see if the power is back on.
+0084   2???           00279                 GOTO    psleep2                 ;If power is still off then we need to go back to sleep.
+                      00280 ;Wake back up and re-init what is needed.
+0085   1683           00281                 bsf             status,rp0      ;go into bank1
+                      00282                 ;bsf    pcon, 0x03              ;set main clock back to 4 MHZ
+0086   30F0           00283                 movlw   0xF0
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0087   0085           00284                 movwf   trisa                   ;change all I/O back to normal on wake up.
+0088   30E0           00285                 movlw   0xE0
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0089   0086           00286                 movwf   trisb
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+008A   1283           00287                 bcf     status,rp0      ;go into bank0
+008B   1F05           00288                 BTFSS   porta, mset             ;When power is switched on check buttons for calibration
+                             mode.
+008C   0008           00289                 RETURN
+008D   1F85           00290                 BTFSS   porta, hset
+008E   0008           00291                 RETURN
+008F   2???           00292                 GOTO    calibrate               ;Go to calibration mode if both buttons are held on powe
+                            r up.
+                      00293 
+                      00294 ;*********** Calibration mode ************************
+0090   1445           00295 calibrate       bsf     calDsp, 0x00
+0091   01BC           00296                 clrf    cd1
+0092   01BD           00297                 clrf    cd2
+0093   01BE           00298                 clrf    cd3
+0094   01BF           00299                 clrf    cd4
+0095   2???           00300                 call    dct
+                      00301 ;Loop until buttons are released.
+0096   2???           00302 calib2          call    calOput
+0097   1B05           00303                 BTFSC   porta, mset
+0098   2???           00304                 GOTO    calib2
+0099   1B85           00305                 BTFSC   porta, hset
+009A   2???           00306                 GOTO    calib2
+                      00307 ;               bsf     t2con, 0x02         ;turn on timer2
+                      00308 ;               bsf     status, rp0         ;goto bank1
+                      00309 ;               bsf     pie1, 0x01          ;enable timer2 IRQ
+                      00310 ;               bcf     pie1, 0x00          ;disable timer1 IRQ
+                      00311 ;               bcf     status, rp0         ;goto bank0
+009B   1B05           00312 calib1          BTFSC   porta, mset         ;Test for Down button
+009C   2???           00313                 call    caliDown
+009D   1B85           00314                 BTFSC   porta, hset         ;Test for Up button
+009E   2???           00315                 call    caliUp
+009F   1E05           00316                 BTFSS   porta, power        ;Test power, removing power ends calibration mode.
+00A0   2???           00317                 GOTO    endCal
+00A1   2???           00318                 call    dzchk               ;check for roll over. If Ltmr1l is 255 then dithcal needs to
+                             be 0.
+00A2   2???           00319                 call    calNumPrep          ;prepair number to be displayed.
+00A3   3014           00320                 movlw   d'20'
+00A4   00C7           00321                 movwf   dspBright
+00A5   30FF           00322                 movlw   d'255'
+00A6   00AE           00323                 movwf   dwtcs
+00A7   30FF           00324                 movlw   d'255'
+00A8   00AD           00325                 movwf   dwtcf
+00A9   2???           00326 drepeat         call    dct                 ;now display it!
+00AA   2???           00327                 call    ddrset
+Message[305]: Using default destination of 1 (file).
+00AB   0BC7           00328                 decfsz  dspBright
+00AC   2???           00329                 goto    drepeat
+00AD   2???           00330                 goto    calib1
+                      00331 
+00AE   0839           00332 calNumPrep      movf    Ltmr1l, 0x00
+00AF   00C6           00333                 movwf   calPrep
+00B0   084A           00334                 movf    dithcal, 0x00
+00B1   00BC           00335                 movwf   cd1
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00B2   01BD           00336                 clrf    cd2
+00B3   01BE           00337                 clrf    cd3
+00B4   01BF           00338                 clrf    cd4
+00B5   0846           00339 calCntUp        movf    calPrep, 0x00
+00B6   3C00           00340                 sublw   d'0'
+00B7   1903           00341                 btfsc   status, z
+00B8   0008           00342                 return
+Message[305]: Using default destination of 1 (file).
+00B9   03C6           00343                 decf    calPrep
+Message[305]: Using default destination of 1 (file).
+00BA   0ABD           00344                 incf    cd2
+00BB   083D           00345                 movf    cd2, 0x00
+00BC   3C0A           00346                 sublw   d'10'
+00BD   1D03           00347                 btfss   status,z
+00BE   2???           00348                 goto    calCntUp
+00BF   01BD           00349                 clrf    cd2
+Message[305]: Using default destination of 1 (file).
+00C0   0ABE           00350                 incf    cd3
+00C1   083E           00351                 movf    cd3, 0x00
+00C2   3C0A           00352                 sublw   d'10'
+00C3   1D03           00353                 btfss   status,z
+00C4   2???           00354                 goto    calCntUp
+00C5   01BE           00355                 clrf    cd3
+Message[305]: Using default destination of 1 (file).
+00C6   0ABF           00356                 incf    cd4
+00C7   083F           00357                 movf    cd4, 0x00
+00C8   3C0A           00358                 sublw   d'10'
+00C9   1D03           00359                 btfss   status,z
+00CA   2???           00360                 goto    calCntUp
+00CB   0008           00361                 return
+                      00362 
+                      00363 ;Write the data to the EEPROM
+00CC   01C8           00364 endCal          clrf    calPlsOut
+                      00365 ;               bsf     status, rp0         ;goto bank1
+                      00366 ;               bcf     pie1, 0x01          ;disable timer2 IRQ
+                      00367 ;               bsf     pie1, 0x00          ;enable timer1 IRQ
+                      00368 ;               bcf     status, rp0         ;goto bank0
+                      00369 ;               bcf     t2con, 0x02         ;turn off timer2
+00CD   1045           00370                 bcf     calDsp, 0x00
+00CE   0839           00371                 movf    Ltmr1l, 0x00        ;Get the calibration data ready.
+00CF   1683           00372                 bsf     status, rp0         ;goto bank1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00D0   009A           00373                 movwf   eedata
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00D1   151C           00374                 bsf     eecon1, 0x02        ;enable write
+00D2   3000           00375                 movlw   0x00
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00D3   009B           00376                 movwf   eeadr               ;address 0
+00D4   138B           00377                 bcf     intcon, 0x07        ;disable IRQs
+00D5   1B8B           00378                 btfsc   intcon, 0x07        ;make sure they are disabled!
+00D6   2???           00379                 goto    $-2                 ;Cha Cha Real Smooth.
+00D7   3055           00380                 movlw   0x55                ;whats the pass code?
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00D8   009D           00381                 movwf   eecon2
+00D9   30AA           00382                 movlw   0xAA
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00DA   009D           00383                 movwf   eecon2
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00DB   149C           00384                 bsf     eecon1, 0x01        ;now write it
+00DC   178B           00385                 bsf     intcon, 0x07        ;re-enable our IRQs
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00DD   189C           00386 wrCHK           btfsc   eecon1, 0x01        ;make sure the write is compleat before disableing it!
+00DE   2???           00387                 goto    wrCHK
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00DF   111C           00388                 bcf     eecon1, 0x02        ;disable write
+00E0   1283           00389                 bcf     status, rp0         ;goto bank0
+                      00390 ;extended Calibration data write for dithering data. Displays in far right digit numbers 0 - 9.
+00E1   084A           00391                 movf    dithcal, 0x00       ;Get the calibration data ready.
+00E2   1683           00392                 bsf     status, rp0         ;goto bank1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00E3   009A           00393                 movwf   eedata
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00E4   151C           00394                 bsf     eecon1, 0x02        ;enable write
+00E5   3001           00395                 movlw   0x01
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00E6   009B           00396                 movwf   eeadr               ;address 0
+00E7   138B           00397                 bcf     intcon, 0x07        ;disable IRQs
+00E8   1B8B           00398                 btfsc   intcon, 0x07        ;make sure they are disabled!
+00E9   2???           00399                 goto    $-2                 ;Cha Cha Real Smooth.
+00EA   3055           00400                 movlw   0x55                ;whats the pass code?
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00EB   009D           00401                 movwf   eecon2
+00EC   30AA           00402                 movlw   0xAA
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00ED   009D           00403                 movwf   eecon2
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00EE   149C           00404                 bsf     eecon1, 0x01        ;now write it
+00EF   178B           00405                 bsf     intcon, 0x07        ;re-enable our IRQs
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00F0   189C           00406 wrCHK2          btfsc   eecon1, 0x01        ;make sure the write is compleat before disableing it!
+00F1   2???           00407                 goto    wrCHK2
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00F2   111C           00408                 bcf     eecon1, 0x02        ;disable write
+00F3   1283           00409                 bcf     status, rp0         ;goto bank0
+00F4   0008           00410                 return
+                      00411 
+                      00412 
+                      00413 ;check for roll over. If Ltmr1l is 255 then dithcal needs to be 0.
+00F5   0839           00414 dzchk           movf    Ltmr1l, 0x00
+00F6   3CFF           00415                 sublw   0xFF
+00F7   1D03           00416                 btfss   status, z
+00F8   0008           00417                 return
+00F9   084A           00418                 movf    dithcal, 0x00
+00FA   3C00           00419                 sublw   0x00
+00FB   1903           00420                 btfsc   status, z
+00FC   0008           00421                 return
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00FD   01CA           00422                 clrf    dithcal
+00FE   0008           00423                 return
+                      00424 
+                      00425 ;*******************************************************
+                      00426 ;User input for calibration mode.
+00FF   2???           00427 caliDown        call    dct
+0100   1B05           00428                 btfsc   porta, mset
+0101   2???           00429                 goto    caliDown
+Message[305]: Using default destination of 1 (file).
+0102   03CA           00430                 decf    dithcal
+0103   300A           00431                 movlw   d'10'
+0104   024A           00432                 subwf   dithcal, 0x00
+0105   1C03           00433                 btfss   status, c
+0106   0008           00434                 return
+0107   3009           00435                 movlw   d'9'
+0108   00CA           00436                 movwf   dithcal
+Message[305]: Using default destination of 1 (file).
+0109   03B9           00437                 decf    Ltmr1l
+010A   0008           00438                 return
+                      00439 
+010B   2???           00440 caliUp          call    dct
+010C   1B85           00441                 btfsc   porta, hset
+010D   2???           00442                 goto    caliUp
+Message[305]: Using default destination of 1 (file).
+010E   0ACA           00443                 incf    dithcal
+010F   300A           00444                 movlw   d'10'
+0110   024A           00445                 subwf   dithcal, 0x00
+0111   1C03           00446                 btfss   status, c
+0112   0008           00447                 return
+0113   3000           00448                 movlw   d'0'
+0114   00CA           00449                 movwf   dithcal
+Message[305]: Using default destination of 1 (file).
+0115   0AB9           00450                 incf    Ltmr1l
+0116   0008           00451                 return
+                      00452 ;********************************
+                      00453 ;Pulse Output.
+0117   1A0E           00454 calOput         btfsc   tmr1l, 0x04     ;this is the clock pulse output for calibration, the output shou
+                            ld be 1024Hz
+0118   2???           00455                 goto    calpls
+0119   1206           00456                 bcf     portb, TclkOut
+011A   0008           00457                 return
+011B   1606           00458 calpls          bsf     portb, TclkOut
+011C   0008           00459                 return
+                      00460 
+                      00461 ;End of calibration Mode.
+                      00462 ;*****************************************************
+                      00463 ;*****************************************************
+                      00464 ;Some display routin for fading the display.
+011D   2???           00465 dispnxt         call    dsot                    ;we want to display our Old time, this is what we fade f
+                            rom
+011E   2???           00466                 call    dct                     ;now display it!
+                      00467 
+011F   1C2F           00468                 btfss   udstat1, 0x00           ;has our time changed? if so then we need to start fadin
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                            g to our next number.
+0120   2???           00469                 goto    disp                    ;skip this if we are fading...
+0121   2???           00470 dispf           call    dsct                    ;we want to display our current set time, this is what w
+                            e fade to
+0122   2???           00471                 call    dct                     ;now display it!
+                      00472 
+                      00473 ;************ now fade using pwm **************
+Message[305]: Using default destination of 1 (file).
+0123   0BB7           00474                 decfsz  ftime
+0124   2???           00475                 goto    disp                    ;scan through the display a few times before changing th
+                            e dutycycle.
+0125   0838           00476                 movf    ftime1, 0x00            ;move the contents of "ftime1" to "ftime" 
+0126   00B7           00477                 movwf   ftime
+Message[305]: Using default destination of 1 (file).
+0127   0AAD           00478                 incf    dwtcf                   ;this is our timeing var for "dwaitf"
+Message[305]: Using default destination of 1 (file).
+0128   0BAE           00479                 decfsz  dwtcs                   ;this is our timeing var for "dwaits" we keep fading unt
+                            il "dwaits" is 0
+0129   2???           00480                 goto    disp                    ;skip if "dwaits" is 0
+012A   3000           00481                 movlw   d'0'
+012B   00AF           00482                 movwf   udstat1                 ;this is the end of our fade, reset "udstat1" to 0
+012C   2???           00483                 call    ddrset                  ;reset our duty cycle
+012D   2???           00484                 call    uod
+012E   2???           00485                 goto    disp
+                      00486 
+                      00487 ;******************************************
+                      00488 ;Update old time data.
+012F   0823           00489 uod             movf    d1, 0x00                ;move data from vars "d1 - d4" to vars "do1 - do4"
+0130   00B1           00490                 movwf   do1
+0131   0824           00491                 movf    d2, 0x00
+0132   00B2           00492                 movwf   do2
+0133   0825           00493                 movf    d3, 0x00
+0134   00B3           00494                 movwf   do3
+0135   0826           00495                 movf    d4, 0x00
+0136   00B4           00496                 movwf   do4
+0137   0008           00497                 return
+                      00498 ;******************************************
+                      00499 ;hour setting sub.
+                      00500 
+0138   1449           00501 seth            bsf     scsv, 0x00
+0139   3000           00502                 movlw   b'00000000'
+013A   008B           00503                 movwf   intcon                  ;disable the IRQ so we stop couinting time.
+013B   3000           00504                 movlw   d'0'
+013C   00AA           00505                 movwf   second                  ;reset our seconds var, for those people who like to kee
+                            p clocks exactly synced
+013D   143B           00506                 bsf     tcirqreg, 0x00          ;clear for IRQ, set for Setting the time!
+                      00507 
+013E   0835           00508                 movf    nset, 0x00
+013F   3C55           00509                 sublw   d'85'                   ;Just stop blinking the display on the first button pres
+                            s, do not change the time yet.
+0140   1903           00510                 btfsc   status,z
+0141   2???           00511                 call    tch                     ;Increase Hour
+0142   3055           00512                 movlw   d'85'
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0143   00B5           00513                 movwf   nset                    ;move "85" into the var "nset" so that we know later to 
+                            not blink our display
+                      00514 
+                      00515 
+0144   1F85           00516 disp1           btfss   porta, hset             ;check to see if we are still holding our hour button.
+0145   2???           00517                 goto    disp0                   ;loop this display sub until released, then goto disp0 d
+                            own near the bottom.
+0146   2???           00518                 call    ddrset
+0147   2???           00519                 call    dsct                    ;we want to display our current set time
+0148   2???           00520                 call    dct
+0149   2???           00521                 goto    disp1
+                      00522 
+                      00523 ;******************************************
+                      00524 ;minute setting sub.
+                      00525 
+014A   1449           00526 setm            bsf     scsv, 0x00
+014B   3000           00527                 movlw   b'00000000'
+014C   008B           00528                 movwf   intcon                  ;disable the IRQ so we stop couinting time.
+014D   3000           00529                 movlw   d'0'
+014E   00AA           00530                 movwf   second                  ;reset our seconds var, for those people who like to kee
+                            p clocks exactly synced
+014F   143B           00531                 bsf     tcirqreg, 0x00          ;clear for IRQ, set for Setting the time!
+                      00532 
+0150   0835           00533                 movf    nset, 0x00
+0151   3C55           00534                 sublw   d'85'                   ;Just stop blinking the display on the first button pres
+                            s, do not change the time yet.
+0152   1903           00535                 btfsc   status,z
+0153   2???           00536                 call    tcm                     ;Increase Minutes
+0154   3055           00537                 movlw   d'85'
+0155   00B5           00538                 movwf   nset                    ;move "85" into the var "nset" so that we know later to 
+                            not blink our display
+                      00539 
+0156   1F05           00540 disp2           btfss   porta, mset             ;check to see if we are still holding our minute button.
+0157   2???           00541                 goto    disp0                   ;loop this display sub until released, then goto disp0 d
+                            own near the bottom.
+0158   2???           00542                 call    ddrset
+0159   2???           00543                 call    dsct                    ;we want to set current data to display our current set 
+                            time
+015A   2???           00544                 call    dct                     ;call display sub routine.
+015B   2???           00545                 goto    disp2
+                      00546 
+                      00547 ;******************************************
+                      00548 ;** Data Selection to display our time ****
+                      00549 
+                      00550 ;Display Current Time.
+015C   1440           00551 dsct            bsf     fadetime, 0x00
+015D   0826           00552                 movf    d4, 0x00                ;get our display info ready
+015E   00BF           00553                 movwf   cd4
+015F   0825           00554                 movf    d3, 0x00
+0160   00BE           00555                 movwf   cd3
+0161   0824           00556                 movf    d2, 0x00
+0162   00BD           00557                 movwf   cd2
+0163   0823           00558                 movf    d1, 0x00
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0164   00BC           00559                 movwf   cd1
+0165   0008           00560                 return
+                      00561 
+                      00562 ;Display Old Time.
+0166   1040           00563 dsot            bcf     fadetime, 0x00
+0167   0834           00564                 movf    do4, 0x00               ;get our display info ready
+0168   00BF           00565                 movwf   cd4
+0169   0833           00566                 movf    do3, 0x00
+016A   00BE           00567                 movwf   cd3
+016B   0832           00568                 movf    do2, 0x00
+016C   00BD           00569                 movwf   cd2
+016D   0831           00570                 movf    do1, 0x00
+016E   00BC           00571                 movwf   cd1
+016F   0008           00572                 return
+                      00573 
+                      00574 
+                      00575 ;******************************************
+                      00576 ;******************************************
+                      00577 ;display whats in the cdX REGs
+                      00578 
+                      00579 ;From left to right, 4 - 1
+                      00580 ;Digit 4
+0170   083F           00581 dct             movf    cd4, 0x00
+0171   0086           00582                 movwf   portb                   ;get our info ready for display
+0172   083F           00583                 movf    cd4, 0x00
+0173   3C01           00584                 sublw   d'1'                    ;check to see if it is a 1 or 2, if it isn't then we don
+                            't need to display anything (what nullc1 is for).
+0174   1903           00585                 btfsc   status, z
+0175   2???           00586                 goto    nullc2
+0176   1C45           00587                 btfss   calDsp, 0x00            ;If in calibration mode then display what ever number is
+                             in cd4.
+0177   2???           00588                 goto    nullc1
+0178   3001           00589 nullc2          movlw   b'00000001'
+0179   0085           00590                 movwf   porta                   ;enable then disable our anode output (you can invert th
+                            ese valuse for a common cathode drive.)
+017A   2???           00591 nullc1          call    dwait2                  ;the time on dwait2 can set the brightness.
+017B   3000           00592                 movlw   b'00000000'
+017C   0085           00593                 movwf   porta
+017D   2???           00594                 call    dwait
+                      00595 ;Digit 3
+017E   083E           00596                 movf    cd3, 0x00
+017F   0086           00597                 movwf   portb                   ;get our info ready for display
+0180   3002           00598                 movlw   b'00000010'
+0181   0085           00599                 movwf   porta                   ;enable then disable our anode output (you can invert th
+                            ese valuse for a common cathode drive.)
+0182   2???           00600                 call    dwait2
+0183   3000           00601                 movlw   b'00000000'
+0184   0085           00602                 movwf   porta
+0185   2???           00603                 call    dwait
+                      00604 ;Digit 2
+0186   083D           00605                 movf    cd2, 0x00
+0187   0086           00606                 movwf   portb                   ;get our info ready for display
+0188   3004           00607                 movlw   b'00000100'
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0189   0085           00608                 movwf   porta                   ;enable then disable our anode output (you can invert th
+                            ese valuse for a common cathode drive.)
+018A   2???           00609                 call    dwait2
+018B   3000           00610                 movlw   b'00000000'
+018C   0085           00611                 movwf   porta
+018D   2???           00612                 call    dwait
+                      00613 ;Digit 1
+018E   083C           00614                 movf    cd1, 0x00
+018F   0086           00615                 movwf   portb                   ;get our info ready for display
+0190   3008           00616                 movlw   b'00001000'
+0191   0085           00617                 movwf   porta                   ;enable then disable our anode output (you can invert th
+                            ese valuse for a common cathode drive.)
+0192   2???           00618                 call    dwait2
+0193   3000           00619                 movlw   b'00000000'
+0194   0085           00620                 movwf   porta
+0195   2???           00621                 call    dwait
+0196   0008           00622                 return
+                      00623 
+                      00624 ;Screen Saver *****************************
+                      00625 ;Cycles through all numbers on tubes to 
+                      00626 ;help prevent cathode poisoning.
+                      00627 ;******************************************
+0197   1449           00628 scrsav  bsf     scsv, 0x00
+0198   1445           00629         bsf     calDsp, 0x00                    ;Set this to display all digits.
+0199   082A           00630         movf    second, 0x00                    ;Get seconds data to display on all digits.
+019A   00BC           00631         movwf   cd1
+019B   00BD           00632         movwf   cd2
+019C   00BE           00633         movwf   cd3
+019D   00BF           00634         movwf   cd4
+019E   2???           00635         call    dct                             ;Cycle through display.
+019F   2???           00636         call    dct                             ;Cycle through display.
+01A0   082A           00637         movf    second, 0x00
+01A1   3C09           00638         sublw   d'9'
+01A2   1803           00639         btfsc   status, c                       ;If seconds is greater than 9 exit this sub.
+01A3   2???           00640         goto    scrsav
+01A4   1045           00641         bcf     calDsp, 0x00                    ;go back to normal display mode.
+01A5   0008           00642         return
+                      00643 
+                      00644 ;******************************************
+                      00645 ;******************************************
+                      00646 ;******************************************
+                      00647 ;******************************************
+                      00648 ;*************** IRQ sub ******************
+                      00649 
+                      00650 
+01A6   180C           00651 count           btfsc   pir1, 0x00      
+01A7   2???           00652                 goto    timeKeep
+01A8   188C           00653                 btfsc   pir1, 0x01
+01A9   2???           00654                 goto    calOput
+01AA   018C           00655                 clrf    pir1                ;do nothing on stray IRQs
+01AB   2???           00656                 goto    irqend
+                      00657 
+                      00658 ;**** Calibration pulse output from clock crystal. *******************
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00659 
+01AC   108C           00660                 bcf     pir1, 0x01
+01AD   2???           00661                 goto    irqend
+                      00662 
+                      00663 
+                      00664 ;******** time keeping for seconds ********
+01AE   100C           00665 timeKeep        bcf     pir1, 0x00
+                      00666 ;               goto    dtest                   ;uncomment to test the display counting
+01AF   0AAA           00667                 incf    second, 0x01
+01B0   082A           00668                 movf    second, 0x00
+01B1   3C3C           00669                 sublw   d'60'                   ;if the seconds are at 60 then we need to rollover to 0 
+                            and increase minute's first digit "d1"
+01B2   1D03           00670                 btfss   status, z
+01B3   2???           00671                 goto    irqend                  ;if we aren't at 60 then we just end our IRQ sub.
+                      00672 
+01B4   103B           00673 dtest           bcf             tcirqreg, 0x00  ;clear for IRQ, set for Setting the time!
+01B5   2???           00674                 call    tcm
+01B6   2???           00675                 goto    irqend
+                      00676 
+                      00677 ;********************************************
+                      00678 ; The end of our IRQ, prepars the
+                      00679 ; configuration of the micro for the
+                      00680 ; next IRQ.
+                      00681 
+01B7   0828           00682 irqend          movf    sst, 0x00               ;we need to get our W and Status REGs back!
+01B8   0083           00683                 movwf   status
+01B9   0829           00684                 movf    sw, 0x00
+01BA   0009           00685                 retfie
+                      00686 
+                      00687 ;********************************************
+                      00688 ;********** time calculator *****************
+                      00689 ;******** time keeping for minutes **********
+01BB   2???           00690 tcm             call    dtachk                  ;Verify our time data with a copy, reset the time to 12:
+                            00 if they aren't the same.
+01BC   3001           00691                 movlw   d'1'
+01BD   00AF           00692                 movwf   udstat1                 ;move 1 into udstat1
+01BE   3000           00693                 movlw   d'0'                    ;reset our seconds to 0 "our rollover"
+01BF   00AA           00694                 movwf   second
+01C0   0AA3           00695                 incf    d1, 0x01                ;increase d1 by 1
+01C1   0823           00696                 movf    d1, 0x00
+01C2   00C1           00697                 movwf   D1chk
+01C3   3C0A           00698                 sublw   d'10'                   ;check to see if d1 is a 10 "we can only count to 9 but 
+                            we want it to roll over only after 9!"
+01C4   1D03           00699                 btfss   status, z
+01C5   0008           00700                 return                  ;if d1 is not a 10 then we end the sub.
+                      00701 
+01C6   3000           00702                 movlw   d'0'                    ;set d1 to 0
+01C7   00A3           00703                 movwf   d1
+01C8   00C1           00704                 movwf   D1chk
+01C9   0AA4           00705                 incf    d2, 0x01                ;increase d2 1 time
+01CA   0824           00706                 movf    d2, 0x00
+01CB   00C2           00707                 movwf   D2chk
+01CC   3C06           00708                 sublw   d'6'                    ;check to see if d2 is a 6 "we can only count to 5 but w
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                            e want it to roll over only after 5!"
+01CD   1D03           00709                 btfss   status, z
+01CE   0008           00710                 return
+01CF   3000           00711                 movlw   d'0'            ;reset d2 to 0, d1 should already be 0
+01D0   00A4           00712                 movwf   d2
+01D1   00C2           00713                 movwf   D2chk
+01D2   183B           00714                 btfsc   tcirqreg, 0x00  ;if we are setting the time then we shouldn't increase the hours
+                             every time we rollover the minutes.
+01D3   0008           00715                 return
+                      00716 
+                      00717 ;********************************************
+                      00718 ;******** time keeping for hours ***********
+01D4   0000           00719 tch             nop
+01D5   0826           00720 ttest           movf    d4, 0x00
+01D6   3C01           00721                 sublw   d'1'                    ;check to see if d4 is a 1 "for hours that are greater t
+                            han 9"
+01D7   1D03           00722                 btfss   status, z
+01D8   2???           00723                 goto    tlow                    ;if our hour is 9 or less then goto tlow
+                      00724 
+01D9   0AA5           00725                 incf    d3, 0x01        ;increase d3 by 1
+01DA   0825           00726                 movf    d3, 0x00
+01DB   00C3           00727                 movwf   D3chk
+01DC   3C03           00728                 sublw   d'3'            ;check to see if d3 is a 3, we can only count to 2 here.
+01DD   1D03           00729                 btfss   status, z
+01DE   0008           00730                 return                          ;end the sub if it isin't a 3
+                      00731 
+01DF   3000           00732                 movlw   d'0'
+01E0   00A5           00733                 movwf   d3                      ;reset d3 to 0 if it is a 3 "13:xx"
+01E1   00C3           00734                 movwf   D3chk
+01E2   0AA6           00735                 incf    d4, 0x01        ;increase d4 by 1
+01E3   0826           00736                 movf    d4, 0x00
+01E4   00C4           00737                 movwf   D4chk
+01E5   3C02           00738                 sublw   d'2'            ;check to see if d4 is a 2 "this part of the sub is included to 
+                            make it easyer to impliment 12/24 switching in the future"
+01E6   1D03           00739                 btfss   status, z
+01E7   0008           00740                 return
+01E8   3001           00741                 movlw   d'1'
+01E9   00A5           00742                 movwf   d3
+01EA   00C3           00743                 movwf   D3chk
+01EB   3000           00744                 movlw   d'0'
+01EC   00A6           00745                 movwf   d4
+01ED   00C4           00746                 movwf   D4chk
+01EE   183B           00747                 btfsc   tcirqreg, 0x00  ;if we are setting the time then we shouldn't reset the time eve
+                            ry time we rollover the hours.
+01EF   0008           00748                 return          
+01F0   3000           00749                 movlw   d'0'            ;reset our time to "01:00"
+01F1   00A3           00750                 movwf   d1
+01F2   00C1           00751                 movwf   D1chk
+01F3   3000           00752                 movlw   d'0'
+01F4   00A4           00753                 movwf   d2
+01F5   00C2           00754                 movwf   D2chk
+01F6   0008           00755                 return
+                      00756 
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00757 ;********************************************
+                      00758 ;************ if hours is 09:00 or less ********
+01F7   0AA5           00759 tlow            incf    d3, 0x01        ;increase d3 by 1
+01F8   0825           00760                 movf    d3, 0x00
+01F9   00C3           00761                 movwf   D3chk
+01FA   3C0A           00762                 sublw   d'10'           ;check to see if d3 is now 10, we can only count to 9 if d4 is 0
+                            , if d4 is 1 then we can only coun to 2! "ttest" checks for this first!
+01FB   1D03           00763                 btfss   status, z
+01FC   0008           00764                 return
+01FD   3000           00765                 movlw   d'0'
+01FE   00A5           00766                 movwf   d3                      ;if d3 is a 10 then we reset it to 0 and increase d4 to 
+                            a 1.
+01FF   00C3           00767                 movwf   D3chk
+0200   0AA6           00768                 incf    d4, 0x01
+0201   0826           00769                 movf    d4, 0x00
+0202   00C4           00770                 movwf   D4chk
+0203   0008           00771                 return
+                      00772 
+                      00773 ;********************************************
+                      00774 ;***********************************************
+                      00775 ;***********************************************
+                      00776 ;Move our new data from "d1 - d4" to "do1 -do4"
+                      00777 ;also reset the time keeping IRQ
+                      00778 ;this sub is used for when we are
+                      00779 ;setting the time.
+                      00780 ;this sub is called on the release
+                      00781 ;of a button.
+                      00782 
+0204   0823           00783 disp0           movf    d1, 0x00
+0205   00B1           00784                 movwf   do1
+0206   0824           00785                 movf    d2, 0x00
+0207   00B2           00786                 movwf   do2
+0208   0825           00787                 movf    d3, 0x00
+0209   00B3           00788                 movwf   do3
+020A   0826           00789                 movf    d4, 0x00
+020B   00B4           00790                 movwf   do4
+020C   0839           00791                 movf    Ltmr1l, 0x00
+020D   008E           00792                 movwf   tmr1l
+020E   083A           00793                 movf    Ltmr1h, 0x00
+020F   008F           00794                 movwf   tmr1h
+0210   30C0           00795                 movlw   b'11000000'
+0211   008B           00796                 movwf   intcon                  ;reenable the IRQ
+0212   2???           00797                 goto    disp                    ;go back to our main routine.
+                      00798 
+                      00799 
+                      00800 ;*****************************************
+0213   3078           00801 ddrset          movlw   d'120'
+0214   00AE           00802                 movwf   dwtcs                   ;set var "dwtcs" to 120
+0215   3001           00803                 movlw   d'1'
+0216   00AD           00804                 movwf   dwtcf                   ;set var "dwtcf" to 1
+0217   0008           00805                 return
+                      00806 
+                      00807 ;*****************************************
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00808 ;Display timeing, we do NOT keep our
+                      00809 ;time here, thats what IRQs are for.
+                      00810 
+0218   3003           00811 dwait           movlw   d'3'
+0219   00A1           00812                 movwf   dwt1
+Message[305]: Using default destination of 1 (file).
+021A   0BA1           00813 dmt1            decfsz  dwt1
+021B   2???           00814                 goto    dmt1
+021C   0008           00815                 return
+                      00816 
+021D   1C40           00817 dwait2          btfss   fadetime, 0x00  ;1 is for current time
+021E   2???           00818                 goto    dtm1
+021F   2???           00819                 call    dwaitf
+0220   0008           00820                 return
+0221   2???           00821 dtm1            call    dwaits
+0222   0008           00822                 return
+                      00823 
+0223   082D           00824 dwaitf          movf    dwtcf, 0x00             ;Old Time
+0224   00AB           00825                 movwf   dwtf
+Message[305]: Using default destination of 1 (file).
+0225   0BAB           00826 dmtf            decfsz  dwtf
+0226   2???           00827                 goto    dmtf
+0227   0008           00828                 return
+                      00829 
+0228   082E           00830 dwaits          movf    dwtcs, 0x00             ;New Time
+0229   00AC           00831                 movwf   dwts
+Message[305]: Using default destination of 1 (file).
+022A   0BAC           00832 dmts            decfsz  dwts
+022B   2???           00833                 goto    dmts
+022C   0008           00834                 return
+                      00835 
+                      00836 ;******** Time curruption check *****************
+022D   0841           00837 dtachk          movf    D1chk,  0x00
+022E   0223           00838                 subwf   d1, 0x00
+022F   1D03           00839                 btfss   status,z
+0230   01B0           00840                 clrf    udstat2
+0231   0842           00841                 movf    D2chk,  0x00
+0232   0224           00842                 subwf   d2, 0x00
+0233   1D03           00843                 btfss   status,z
+0234   01B0           00844                 clrf    udstat2
+0235   0843           00845                 movf    D3chk,  0x00
+0236   0225           00846                 subwf   d3, 0x00
+0237   1D03           00847                 btfss   status,z
+0238   01B0           00848                 clrf    udstat2
+0239   0844           00849                 movf    D4chk,  0x00
+023A   0226           00850                 subwf   d4, 0x00
+023B   1D03           00851                 btfss   status,z
+023C   01B0           00852                 clrf    udstat2
+023D   0830           00853 tcrptchk        movf    udstat2, 0x00
+023E   3C55           00854                 sublw   d'85'                   ;85 is just a number in this case, we want to see if our
+                             clock is a fresh start or has been reset.
+023F   1903           00855                 btfsc   status,z                ;check to see if we had a soft or hard reset
+0240   0008           00856                 return                          ;we want to skip reseting the time if its just a soft re
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                            set of the micro.
+0241   3000           00857                 movlw   d'0'                    ;load our "d1 - d4" vars with 12:00 if it is a hard rese
+                            t
+0242   00A3           00858                 movwf   d1
+0243   00C1           00859                 movwf   D1chk
+0244   3000           00860                 movlw   d'0'
+0245   00A4           00861                 movwf   d2
+0246   00C2           00862                 movwf   D2chk
+0247   3002           00863                 movlw   d'2'
+0248   00A5           00864                 movwf   d3
+0249   00C3           00865                 movwf   D3chk
+024A   3001           00866                 movlw   d'1'
+024B   00A6           00867                 movwf   d4
+024C   00C4           00868                 movwf   D4chk
+024D   2???           00869                 call    uod
+024E   3055           00870                 movlw   d'85'
+024F   00B0           00871                 movwf   udstat2                 ;load the number 85 into udstat2, used to tell if we are
+                             on a fresh start or a reset.
+0250   01B5           00872                 clrf    nset                    ;Blink our numbers
+0251   0008           00873                 return
+                      00874 
+                      00875 
+                      00876 ;************ Clock calibration update ************
+                      00877 ;Get calibration data form EEPROM
+0252   1683           00878 clkupdt         bsf status, rp0         ;goto bank1
+0253   3000           00879                 movlw   0x00
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0254   009B           00880                 movwf   eeadr
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0255   141C           00881                 bsf     eecon1, 0x00
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0256   081A           00882                 movf    eedata, 0x00
+0257   1283           00883                 bcf     status, rp0     ;goto bank 0
+0258   00B9           00884                 movwf   Ltmr1l          ;clock timeing adjust, decrease to make clock slower. our timer 
+                            counts up!
+0259   00CC           00885                 movwf   Ltmr1ltmp
+025A   008E           00886                 movwf   tmr1l           ;Default is 254, adjusting by 1 is about 4 minutes per 3 months.
+025B   307F           00887                 movlw   d'127'          ;clock timeing adjust, default is 127
+025C   00BA           00888                 movwf   Ltmr1h
+025D   008F           00889                 movwf   tmr1h
+025E   084C           00890                 movf    Ltmr1ltmp, 0x00
+025F   3CFF           00891                 sublw   0xFF
+0260   1D03           00892                 btfss   status, z
+0261   0ACC           00893                 incf    Ltmr1ltmp, 0x01
+                      00894 
+0262   1683           00895                 bsf status, rp0         ;goto bank1
+0263   3001           00896                 movlw   0x01
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0264   009B           00897                 movwf   eeadr
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0265   141C           00898                 bsf     eecon1, 0x00
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0266   081A           00899                 movf    eedata, 0x00
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0267   1283           00900                 bcf     status, rp0     ;goto bank 0
+0268   00CA           00901                 movwf   dithcal         ;Dither between two different calibration sets to increse accura
+                            cy.
+0269   0008           00902                 return
+                      00903 
+                      00904 ;*******************************
+                      00905 ;**** Device Configuration *****
+                      00906 ;you may need to comment this
+                      00907 ;out for MPLab to compile.
+                      00908 ;               org             0x2007
+                      00909 ;               data    0x2174
+                      00910 
+                      00911 ;*******************************
+                      00912 
+Warning[205]: Found directive in column 1. (END)
+3F30                  00913 END
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE 21
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+D1chk                             00000041
+D2chk                             00000042
+D3chk                             00000043
+D4chk                             00000044
+Ltmr1h                            0000003A
+Ltmr1l                            00000039
+Ltmr1ltmp                         0000004C
+TclkOut                           00000004
+_.org_1_00D6                      000000D6
+_.org_1_00E9                      000000E9
+__16F628A                         00000001
+addtime                           0000001E
+c                                 00000000
+calCntUp                          000000B5
+calDsp                            00000045
+calNumPrep                        000000AE
+calOput                           00000117
+calPlsOut                         00000048
+calPrep                           00000046
+caliDown                          000000FF
+caliUp                            0000010B
+calib1                            0000009B
+calib2                            00000096
+calibrate                         00000090
+calpls                            0000011B
+ccp1con                           00000017
+cd1                               0000003C
+cd2                               0000003D
+cd3                               0000003E
+cd4                               0000003F
+chktwo                            0000006E
+clkupdt                           00000252
+cmcon                             0000001F
+count                             000001A6
+d1                                00000023
+d2                                00000024
+d3                                00000025
+d4                                00000026
+dct                               00000170
+ddrset                            00000213
+disoff                            00000061
+disp                              0000004B
+disp0                             00000204
+disp1                             00000144
+disp2                             00000156
+dispf                             00000121
+dispnxt                           0000011D
+dithcal                           0000004A
+dithcnt                           0000004B
+dmt1                              0000021A
+dmtf                              00000225
+dmts                              0000022A
+do1                               00000031
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE 22
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+do2                               00000032
+do3                               00000033
+do4                               00000034
+drepeat                           000000A9
+dsct                              0000015C
+dsot                              00000166
+dspBright                         00000047
+dtachk                            0000022D
+dtest                             000001B4
+dthchk                            00000010
+dtm1                              00000221
+dwait                             00000218
+dwait2                            0000021D
+dwaitf                            00000223
+dwaits                            00000228
+dwt1                              00000021
+dwt2                              00000022
+dwtcf                             0000002D
+dwtcs                             0000002E
+dwtf                              0000002B
+dwts                              0000002C
+dzchk                             000000F5
+eeadr                             0000009B
+eecon1                            0000009C
+eecon2                            0000009D
+eedata                            0000009A
+endCal                            000000CC
+endb                              00000007
+fadetime                          00000040
+ftime                             00000037
+ftime1                            00000038
+hset                              00000007
+init                              00000022
+intcon                            0000000B
+irqend                            000001B7
+mset                              00000006
+nset                              00000035
+nullc1                            0000017A
+nullc2                            00000178
+opt_reg                           00000081
+pcon                              0000008E
+pie1                              0000008C
+pir1                              0000000C
+porta                             00000005
+portb                             00000006
+power                             00000004
+pr2                               00000092
+psleep                            0000007B
+psleep2                           00000082
+roed                              00000019
+rp0                               00000005
+rp1                               00000006
+scchk                             00000064
+MPASM 5.70                    NIXIECLOCK.ASM   7-4-2021  7:54:32         PAGE 23
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+scrsav                            00000197
+scsv                              00000049
+second                            0000002A
+seth                              00000138
+setm                              0000014A
+sst                               00000028
+status                            00000003
+sw                                00000029
+t1con                             00000010
+t2con                             00000012
+tch                               000001D4
+tcirqreg                          0000003B
+tcm                               000001BB
+tcrptchk                          0000023D
+timeKeep                          000001AE
+tlow                              000001F7
+tmr1h                             0000000F
+tmr1l                             0000000E
+tmr2                              00000011
+tnset                             00000036
+trisa                             00000085
+trisb                             00000086
+ttest                             000001D5
+txsta                             00000098
+udstat1                           0000002F
+udstat2                           00000030
+uod                               0000012F
+vrcon                             0000009F
+wrCHK                             000000DD
+wrCHK2                            000000F0
+z                                 00000002
+zroed                             00000017
+
+Errors   :     0
+Warnings :     3 reported,     0 suppressed
+Messages :    50 reported,     0 suppressed
+
+

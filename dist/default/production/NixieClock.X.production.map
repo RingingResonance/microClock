@@ -1,0 +1,156 @@
+MPLINK 5.08, LINKER
+Linker Map File - Created Sun Jul 04 07:54:33 2021
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000004    program   0x0004cc
+.config_2007_BUILD/DEFAULT/PRODUCTION/NIXIECL       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000002      
+                            0x000004    0x000269      
+                            0x002007    0x002007      
+            618 out of 2182 program addresses used, program memory utilization is 28%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+             _.org_1_00D6   0x0000d6    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+             _.org_1_00E9   0x0000e9    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                  addtime   0x00001e    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                 calCntUp   0x0000b5    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+               calNumPrep   0x0000ae    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                  calOput   0x000117    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                 caliDown   0x0000ff    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   caliUp   0x00010b    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   calib1   0x00009b    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   calib2   0x000096    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                calibrate   0x000090    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   calpls   0x00011b    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   chktwo   0x00006e    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                  clkupdt   0x000252    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    count   0x0001a6    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                      dct   0x000170    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   ddrset   0x000213    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   disoff   0x000061    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     disp   0x00004b    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    disp0   0x000204    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    disp1   0x000144    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    disp2   0x000156    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    dispf   0x000121    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                  dispnxt   0x00011d    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     dmt1   0x00021a    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     dmtf   0x000225    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     dmts   0x00022a    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                  drepeat   0x0000a9    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     dsct   0x00015c    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     dsot   0x000166    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   dtachk   0x00022d    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    dtest   0x0001b4    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   dthchk   0x000010    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     dtm1   0x000221    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    dwait   0x000218    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   dwait2   0x00021d    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   dwaitf   0x000223    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   dwaits   0x000228    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    dzchk   0x0000f5    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   endCal   0x0000cc    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     init   0x000022    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   irqend   0x0001b7    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   nullc1   0x00017a    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   nullc2   0x000178    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   psleep   0x00007b    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                  psleep2   0x000082    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     roed   0x000019    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    scchk   0x000064    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   scrsav   0x000197    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     seth   0x000138    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     setm   0x00014a    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                      tch   0x0001d4    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                      tcm   0x0001bb    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                 tcrptchk   0x00023d    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                 timeKeep   0x0001ae    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     tlow   0x0001f7    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    ttest   0x0001d5    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                      uod   0x00012f    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    wrCHK   0x0000dd    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   wrCHK2   0x0000f0    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    zroed   0x000017    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                   dthchk   0x000010    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    zroed   0x000017    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     roed   0x000019    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                  addtime   0x00001e    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     init   0x000022    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     disp   0x00004b    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   disoff   0x000061    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    scchk   0x000064    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   chktwo   0x00006e    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   psleep   0x00007b    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                  psleep2   0x000082    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                calibrate   0x000090    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   calib2   0x000096    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   calib1   0x00009b    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                  drepeat   0x0000a9    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+               calNumPrep   0x0000ae    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                 calCntUp   0x0000b5    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   endCal   0x0000cc    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+             _.org_1_00D6   0x0000d6    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    wrCHK   0x0000dd    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+             _.org_1_00E9   0x0000e9    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   wrCHK2   0x0000f0    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    dzchk   0x0000f5    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                 caliDown   0x0000ff    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   caliUp   0x00010b    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                  calOput   0x000117    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   calpls   0x00011b    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                  dispnxt   0x00011d    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    dispf   0x000121    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                      uod   0x00012f    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     seth   0x000138    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    disp1   0x000144    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     setm   0x00014a    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    disp2   0x000156    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     dsct   0x00015c    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     dsot   0x000166    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                      dct   0x000170    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   nullc2   0x000178    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   nullc1   0x00017a    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   scrsav   0x000197    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    count   0x0001a6    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                 timeKeep   0x0001ae    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    dtest   0x0001b4    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   irqend   0x0001b7    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                      tcm   0x0001bb    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                      tch   0x0001d4    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    ttest   0x0001d5    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     tlow   0x0001f7    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    disp0   0x000204    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   ddrset   0x000213    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                    dwait   0x000218    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     dmt1   0x00021a    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   dwait2   0x00021d    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     dtm1   0x000221    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   dwaitf   0x000223    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     dmtf   0x000225    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   dwaits   0x000228    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                     dmts   0x00022a    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                   dtachk   0x00022d    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                 tcrptchk   0x00023d    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+                  clkupdt   0x000252    program     static C:\Users\User\MPLABXProjects\NixieClock.X\NixieClock.asm
+
+
